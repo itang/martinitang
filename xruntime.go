@@ -26,10 +26,18 @@ type xRuntimeResponseWriter struct {
 	martini.ResponseWriter
 }
 
+func (xw xRuntimeResponseWriter) WriteHeader(s int) {
+	xw.tryAddXRuntimeHeader()
+	xw.ResponseWriter.WriteHeader(s)
+}
+
 func (xw xRuntimeResponseWriter) Write(p []byte) (int, error) {
+	xw.tryAddXRuntimeHeader()
+	return xw.ResponseWriter.Write(p)
+}
+
+func (xw xRuntimeResponseWriter) tryAddXRuntimeHeader() {
 	if len(xw.Header().Get(HeaderXRuntime)) == 0 {
 		xw.Header().Add(HeaderXRuntime, fmt.Sprintf("%v", time.Now().Sub(xw.start)))
 	}
-
-	return xw.ResponseWriter.Write(p)
 }
