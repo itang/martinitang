@@ -38,6 +38,6 @@ func (xw xRuntimeResponseWriter) Write(p []byte) (int, error) {
 
 func (xw xRuntimeResponseWriter) tryAddXRuntimeHeader() {
 	if len(xw.Header().Get(HeaderXRuntime)) == 0 {
-		xw.Header().Add(HeaderXRuntime, fmt.Sprintf("%v", time.Now().Sub(xw.start)))
+		xw.Header().Add(HeaderXRuntime, fmt.Sprintf("%v", time.Since(xw.start)))
 	}
 }
